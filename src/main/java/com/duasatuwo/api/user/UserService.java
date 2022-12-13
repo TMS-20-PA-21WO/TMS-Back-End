@@ -23,4 +23,8 @@ public class UserService {
     public Iterable<User> findAll(){
         return userRepo.findAll();
     }
+
+    public Iterable<User> findAuth(String email, String password){
+        return userRepo.findUserAuth(email, password);
+      }
 }
