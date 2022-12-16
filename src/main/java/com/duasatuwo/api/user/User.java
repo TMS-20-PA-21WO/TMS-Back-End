@@ -1,7 +1,6 @@
 package com.duasatuwo.api.user;
 
 import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,8 +11,8 @@ import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "user")
-public class User implements Serializable{
-    
+public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -76,5 +75,4 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    
 }
