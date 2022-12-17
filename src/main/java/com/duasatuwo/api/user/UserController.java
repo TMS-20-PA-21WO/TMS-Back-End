@@ -28,21 +28,21 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseData<User>> postUser(@Valid @RequestBody User user, Errors errors){
+    public ResponseEntity<ResponseData<User>> postUser(@Valid @RequestBody User user, Errors errors) {
 
         ResponseData<User> responseData = new ResponseData<>();
 
         if (errors.hasErrors()) {
-            for(ObjectError error : errors.getAllErrors()){
+            for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessage().add(error.getDefaultMessage());
             }
-            
+
             responseData.setResult(false);
             responseData.setData(null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
-        
+
         responseData.setResult(true);
         List<User> value = new ArrayList<>();
         value.add(userService.save(user));
@@ -87,25 +87,26 @@ public class UserController {
 
     @PostMapping("/auth")
     public ResponseEntity<ResponseData<User>> getStudentAuth(@RequestBody AuthentificationKey authentificationKey) {
-    ResponseData<User> responseData = new ResponseData<>();
+        ResponseData<User> responseData = new ResponseData<>();
 
-    System.out.print(authentificationKey.getEmail());
-    System.out.print(authentificationKey.getPassword());
+        System.out.print(authentificationKey.getEmail());
+        System.out.print(authentificationKey.getPassword());
 
-    try{
-      Iterable<User> values = userService.findAuth(authentificationKey.getEmail(), authentificationKey.getPassword());
-      responseData.setResult(true);
-      responseData.getMessage();
-      responseData.setData(values);
-      return ResponseEntity.ok(responseData);
+        try {
+            Iterable<User> values = userService.findAuth(authentificationKey.getEmail(),
+                    authentificationKey.getPassword());
+            responseData.setResult(true);
+            responseData.getMessage();
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
 
-    } catch (Exception e ) {
-      List<String> message = new ArrayList<>();
-      message.add(e.getMessage());
-      responseData.setMessage(message);
-      responseData.setData(null);
-      responseData.setResult(false);
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+            responseData.setData(null);
+            responseData.setResult(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
     }
-  }
 }
