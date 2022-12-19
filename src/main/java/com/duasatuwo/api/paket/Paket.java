@@ -26,13 +26,13 @@ public class Paket implements Serializable {
 
     @Column(length = 10)
     @NotEmpty(message = "Price is requred")
-    private Double price;
+    private int price;
 
     public Paket() {
     }
 
     public Paket(int id, @NotEmpty(message = "Package name is required") String package_name,
-            @NotEmpty(message = "Price is requred") Double price) {
+            @NotEmpty(message = "Price is requred") int price) {
         this.id = id;
         this.package_name = package_name;
         this.price = price;
@@ -54,15 +54,11 @@ public class Paket implements Serializable {
         this.package_name = package_name;
     }
 
-    public Double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
-
-
-
-    
 }
