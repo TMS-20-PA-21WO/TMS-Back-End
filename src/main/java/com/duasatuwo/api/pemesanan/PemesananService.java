@@ -27,4 +27,8 @@ public class PemesananService {
     public void removeOne(int id){
         pemesananRepo.deleteById(id);
     }
+
+    public Iterable<Pemesanan> findPemesananUser(int id_user){
+        return pemesananRepo.findPemesananUser(id_user);
+    }
 }

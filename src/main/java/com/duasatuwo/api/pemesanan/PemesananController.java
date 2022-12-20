@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.duasatuwo.api.dto.PemesananByUser;
 import com.duasatuwo.api.dto.ResponseData;
 
 import jakarta.validation.Valid;
@@ -127,6 +128,29 @@ public class PemesananController {
             responseData.setResult(false);
             responseData.getMessage().add(ex.getMessage());
 
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+    }
+
+    @PostMapping("/pemesananUser")
+    public ResponseEntity<ResponseData<Pemesanan>> getPemesananUser(@RequestBody PemesananByUser pemesananByUser) {
+        ResponseData<Pemesanan> responseData = new ResponseData<>();
+
+        System.out.print(pemesananByUser.getId_user());
+
+        try {
+            Iterable<Pemesanan> values = pemesananService.findPemesananUser(pemesananByUser.getId_user());
+            responseData.setResult(true);
+            responseData.getMessage();
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
+
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+            responseData.setData(null);
+            responseData.setResult(false);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
     }
