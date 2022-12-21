@@ -31,4 +31,8 @@ public class PemesananService {
     public Iterable<Pemesanan> findPemesananUser(int id_user){
         return pemesananRepo.findPemesananUser(id_user);
     }
+
+    public Iterable<Pemesanan> doValidation(int id_user, int id_package, String date){
+        return pemesananRepo.doValidation(id_user, id_package, date);
+    }
 }

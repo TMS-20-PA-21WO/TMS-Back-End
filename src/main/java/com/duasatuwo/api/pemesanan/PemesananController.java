@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.duasatuwo.api.dto.PemesananByUser;
 import com.duasatuwo.api.dto.ResponseData;
+import com.duasatuwo.api.dto.Validation;
 
 import jakarta.validation.Valid;
 
@@ -140,6 +141,32 @@ public class PemesananController {
 
         try {
             Iterable<Pemesanan> values = pemesananService.findPemesananUser(pemesananByUser.getId_user());
+            responseData.setResult(true);
+            responseData.getMessage();
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
+
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+            responseData.setData(null);
+            responseData.setResult(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+    }
+
+    @PostMapping("/validation")
+    public ResponseEntity<ResponseData<Pemesanan>> getStudentAuth(@RequestBody Validation validation) {
+        ResponseData<Pemesanan> responseData = new ResponseData<>();
+
+        System.out.print(validation.getId_user());
+        System.out.print(validation.getId_package());
+        System.out.println(validation.getDate());
+
+        try {
+            Iterable<Pemesanan> values = pemesananService.doValidation(validation.getId_user(),
+            validation.getId_package(), validation.getDate());
             responseData.setResult(true);
             responseData.getMessage();
             responseData.setData(values);
