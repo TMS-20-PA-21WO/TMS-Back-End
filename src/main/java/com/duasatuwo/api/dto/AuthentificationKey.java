@@ -1,5 +1,7 @@
 package com.duasatuwo.api.dto;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public class AuthentificationKey {
     
     private String email;
@@ -15,6 +17,8 @@ public class AuthentificationKey {
         return password;
     }
     public void setPassword(String password) {
-        this.password = password;
+        // this.password = password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password).toString();
     }
 }
