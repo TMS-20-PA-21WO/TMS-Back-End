@@ -34,5 +34,4 @@ public class ResponseData<T> {
 
     public void setMessage(String string) {
     }
-    
 }
