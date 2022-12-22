@@ -3,6 +3,8 @@ package com.duasatuwo.api.pemesanan;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.duasatuwo.api.dto.PemesananByUser;
 import com.duasatuwo.api.dto.ResponseData;
 import com.duasatuwo.api.dto.Validation;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/pemesanan")
@@ -137,7 +137,7 @@ public class PemesananController {
     public ResponseEntity<ResponseData<Pemesanan>> getPemesananUser(@RequestBody PemesananByUser pemesananByUser) {
         ResponseData<Pemesanan> responseData = new ResponseData<>();
 
-        System.out.print(pemesananByUser.getId_user());
+        System.out.print("id:"+pemesananByUser.getId_user());
 
         try {
             Iterable<Pemesanan> values = pemesananService.findPemesananUser(pemesananByUser.getId_user());
