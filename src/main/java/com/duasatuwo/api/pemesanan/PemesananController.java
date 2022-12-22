@@ -21,7 +21,7 @@ import com.duasatuwo.api.dto.PemesananByUser;
 import com.duasatuwo.api.dto.ResponseData;
 import com.duasatuwo.api.dto.Validation;
 
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/pemesanan")
