@@ -30,7 +30,7 @@ public class User implements Serializable {
     @NotEmpty(message = "Email is required")
     private String email;
 
-    @Column(length = 30)
+    @Column(length = 100)
     @NotEmpty(message = "Password is required")
     private String password;
 

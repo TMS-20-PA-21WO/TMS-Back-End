@@ -8,4 +8,7 @@ public interface UserRepo extends CrudRepository<User, Integer>{
     
     @Query(value = "SELECT a.* FROM user a WHERE a.email = :email AND a.password = :password", nativeQuery = true)
     public Iterable<User> findUserAuth(@Param("email") String email, @Param("password") String password);
+    
+    @Query(value = "SELECT a.* FROM user a WHERE a.email = :email", nativeQuery = true)
+    public Iterable<User> findEmail(@Param("email") String email);
 }

@@ -32,7 +32,7 @@ public class PemesananService {
         return pemesananRepo.findPemesananUser(id_user);
     }
 
-    public Iterable<Pemesanan> doValidation(int id_user, int id_package, String date){
-        return pemesananRepo.doValidation(id_user, id_package, date);
+    public Iterable<Pemesanan> doValidation(int id_user, String date){
+        return pemesananRepo.doValidation(id_user, date);
     }
 }

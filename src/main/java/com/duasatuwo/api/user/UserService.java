@@ -46,25 +46,39 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public Iterable<User> findAuth(String email, String password){
-        password = this.passwordEncoder.encode(password);
-        // System.out.println(password);
+    // public Iterable<User> findAuth(String email, String password){
+    //     password = this.passwordEncoder.encode(password);
+    //     // System.out.println(password);
 
-        // String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-                // String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-        // String bcryptHashString = user.getPassword();
-        // BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), bcryptHashString);
-        // System.out.println(bcryptHashString);
-        // if (result.verified == true){
-        //     return userRepo.findUserAuth(email, password);
-        // } return null;
+    //     // String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+    //             // String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+    //     // String bcryptHashString = user.getPassword();
+    //     // BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), bcryptHashString);
+    //     // System.out.println(bcryptHashString);
+    //     // if (result.verified == true){
+    //     //     return userRepo.findUserAuth(email, password);
+    //     // } return null;
         
-        return userRepo.findUserAuth(email, password);
+    //     return userRepo.findUserAuth(email, password);
 
-        // if (password == !authentificationKey.setPassword(encodedPasssword);){
-        //     return userRepo.findUserAuth(email, password);
-        // }
-        // return null;
+    //     // if (password == !authentificationKey.setPassword(encodedPasssword);){
+    //     //     return userRepo.findUserAuth(email, password);
+    //     // }
+    //     // return null;
         
-      }
+    //   }
+
+    public Iterable<User> findAuth(String email, String password) {
+        String passwordEncode = this.passwordEncoder.encode(password);
+        password = passwordEncode;
+        System.out.println("pass: " + password);
+        if (passwordEncoder.matches(password, passwordEncode)) {
+            return userRepo.findUserAuth(email, password);
+        }
+        return null;
+    }
+
+    public Iterable<User> findEmail(String email){
+        return userRepo.findEmail(email);
+    }
 }

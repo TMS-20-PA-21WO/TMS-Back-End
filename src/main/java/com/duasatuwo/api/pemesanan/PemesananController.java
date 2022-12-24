@@ -1,5 +1,6 @@
 package com.duasatuwo.api.pemesanan;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,28 +30,39 @@ public class PemesananController {
     
     @Autowired
     private PemesananService pemesananService;
+    private PemesananRepo pemesananRepo;
+    private Validation validation;
 
     @PostMapping
     public ResponseEntity<ResponseData<Pemesanan>> postPemesanan(@Valid @RequestBody Pemesanan pemesanan, Errors errors) {
         
         ResponseData<Pemesanan> responseData = new ResponseData<>();
         
-        if (errors.hasErrors()) {
-            for(ObjectError error : errors.getAllErrors()){
-                responseData.getMessage().add(error.getDefaultMessage());
+        if (pemesananRepo.doValidation(pemesanan.getId(), pemesanan.getDate()) == null){
+            if (errors.hasErrors()) {
+                for(ObjectError error : errors.getAllErrors()){
+                    responseData.getMessage().add(error.getDefaultMessage());
+                }
+                
+                responseData.setResult(false);
+                responseData.setData(null);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
-            
+            responseData.setResult(true);
+            List<Pemesanan> value = new ArrayList<>();
+            value.add(pemesananService.save(pemesanan));
+            responseData.setData(value);
+            return ResponseEntity.ok(responseData);
+        }
+        else {
+            responseData.getMessage().add("Cannot create order, same date found");
             responseData.setResult(false);
-            responseData.setData(null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
         
-        responseData.setResult(true);
-        List<Pemesanan> value = new ArrayList<>();
-        value.add(pemesananService.save(pemesanan));
-        responseData.setData(value);
-        return ResponseEntity.ok(responseData);
+        
     }
 
     @GetMapping
@@ -161,12 +173,10 @@ public class PemesananController {
         ResponseData<Pemesanan> responseData = new ResponseData<>();
 
         System.out.print(validation.getId_user());
-        System.out.print(validation.getId_package());
         System.out.println(validation.getDate());
 
         try {
-            Iterable<Pemesanan> values = pemesananService.doValidation(validation.getId_user(),
-            validation.getId_package(), validation.getDate());
+            Iterable<Pemesanan> values = pemesananService.doValidation(validation.getId_user(), validation.getDate());
             responseData.setResult(true);
             responseData.getMessage();
             responseData.setData(values);
