@@ -1,84 +1,47 @@
 package com.duasatuwo.api.user;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.duasatuwo.api.dto.AuthentificationKey;
-
-// import at.favre.lib.crypto.bcrypt.BCrypt;
+import at.favre.lib.crypto.bcrypt.BCrypt;
+import java.util.List;
 import javax.transaction.Transactional;
 
 @Service
 @Transactional
 public class UserService {
 
-    UserRepo userRepo;
-    PasswordEncoder passwordEncoder;
-    AuthentificationKey authentificationKey;
-    
-    // @Autowired
-    // private UserRepo userRepo;
-    // private User user;
+    @Autowired
+    private UserRepo userRepo;
 
-    public UserService(UserRepo _userRepo){
-        this.userRepo = _userRepo;
-        // this.authentificationKey = _authentificationKey;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    public User save(User user) {
+        String bcryptHashString = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(bcryptHashString);
 
-    public User save(User user){
-        String encodedPasssword = this.passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPasssword);
-
-        // String bcryptHashString = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
-        // BCrypt.Result result = BCrypt.verifyer().verify(user.setPassword(bcryptHashString).toCharArray());
-        // user.setPassword(bcryptHashString);
         return userRepo.save(user);
     }
 
-    public User findOne(int id){
+    public User findOne(int id) {
         return userRepo.findById(id).get();
     }
 
-    public Iterable<User> findAll(){
+    public Iterable<User> findAll() {
         return userRepo.findAll();
     }
 
-    // public Iterable<User> findAuth(String email, String password){
-    //     password = this.passwordEncoder.encode(password);
-    //     // System.out.println(password);
-
-    //     // String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-    //             // String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-    //     // String bcryptHashString = user.getPassword();
-    //     // BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), bcryptHashString);
-    //     // System.out.println(bcryptHashString);
-    //     // if (result.verified == true){
-    //     //     return userRepo.findUserAuth(email, password);
-    //     // } return null;
-        
-    //     return userRepo.findUserAuth(email, password);
-
-    //     // if (password == !authentificationKey.setPassword(encodedPasssword);){
-    //     //     return userRepo.findUserAuth(email, password);
-    //     // }
-    //     // return null;
-        
-    //   }
-
-    public Iterable<User> findAuth(String email, String password) {
-        String passwordEncode = this.passwordEncoder.encode(password);
-        password = passwordEncode;
-        System.out.println("pass: " + password);
-        if (passwordEncoder.matches(password, passwordEncode)) {
-            return userRepo.findUserAuth(email, password);
-        }
-        return null;
+    public Iterable<User> findEmail(String email) {
+        return userRepo.findEmail(email);
     }
 
-    public Iterable<User> findEmail(String email){
-        return userRepo.findEmail(email);
+    public Iterable<User> findAuth(String email, String password) {
+        List<User> storeData = (List<User>) userRepo.findEmail(email);
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storeData.get(0).getPassword());
+        password = storeData.get(0).getPassword();
+        System.out.println("password=" + result);
+
+        if (result.verified == true) {
+            return userRepo.findUserAuth(email, password);
+        } else {
+            return null;
+        }
     }
 }

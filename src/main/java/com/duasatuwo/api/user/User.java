@@ -2,8 +2,6 @@ package com.duasatuwo.api.user;
 
 import java.io.Serializable;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -75,7 +73,6 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(password).toString();
+        this.password = password;
     }
 }
