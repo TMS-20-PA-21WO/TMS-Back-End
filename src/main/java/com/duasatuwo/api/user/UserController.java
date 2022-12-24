@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.duasatuwo.api.dto.AuthentificationKey;
+import com.duasatuwo.api.dto.GetEmail;
 import com.duasatuwo.api.dto.ResponseData;
 
 import javax.validation.Valid;
@@ -95,6 +96,29 @@ public class UserController {
         try {
             Iterable<User> values = userService.findAuth(authentificationKey.getEmail(),
                     authentificationKey.getPassword());
+            responseData.setResult(true);
+            responseData.getMessage();
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
+
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+            responseData.setData(null);
+            responseData.setResult(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+    }
+
+    @PostMapping("/findEmail")
+    public ResponseEntity<ResponseData<User>> getEmail(@RequestBody GetEmail getEmail) {
+        ResponseData<User> responseData = new ResponseData<>();
+
+        System.out.print(getEmail.getEmail());
+
+        try {
+            Iterable<User> values = userService.findEmail(getEmail.getEmail());
             responseData.setResult(true);
             responseData.getMessage();
             responseData.setData(values);

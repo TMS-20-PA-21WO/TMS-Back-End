@@ -1,5 +1,6 @@
 package com.duasatuwo.api.pemesanan;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class PemesananController {
 
     @Autowired
     private PemesananService pemesananService;
+    private PemesananRepo pemesananRepo;
+    private Validation validation;
 
     @PostMapping
     public ResponseEntity<ResponseData<Pemesanan>> postPemesanan(@Valid @RequestBody Pemesanan pemesanan,
@@ -42,7 +45,6 @@ public class PemesananController {
             }
 
             responseData.setResult(false);
-            responseData.setData(null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
