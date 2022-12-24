@@ -26,31 +26,44 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/pemesanan")
 public class PemesananController {
-    
+
     @Autowired
     private PemesananService pemesananService;
 
     @PostMapping
-    public ResponseEntity<ResponseData<Pemesanan>> postPemesanan(@Valid @RequestBody Pemesanan pemesanan, Errors errors) {
-        
+    public ResponseEntity<ResponseData<Pemesanan>> postPemesanan(@Valid @RequestBody Pemesanan pemesanan,
+            Errors errors) {
+
         ResponseData<Pemesanan> responseData = new ResponseData<>();
-        
+
         if (errors.hasErrors()) {
-            for(ObjectError error : errors.getAllErrors()){
+            for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessage().add(error.getDefaultMessage());
             }
-            
+
             responseData.setResult(false);
             responseData.setData(null);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
-        
-        responseData.setResult(true);
-        List<Pemesanan> value = new ArrayList<>();
-        value.add(pemesananService.save(pemesanan));
-        responseData.setData(value);
-        return ResponseEntity.ok(responseData);
+
+        List<Pemesanan> storeData = (List<Pemesanan>) pemesananService.doValidation(pemesanan.getUser().getId(),
+                pemesanan.getDate());
+
+        if (storeData.size() >= 1) {
+            responseData.setResult(false);
+            responseData.getMessage().add("Anda Sudah Memesan Tanggal Ini");
+            responseData.setData(null);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        } else {
+            responseData.setResult(true);
+            List<Pemesanan> value = new ArrayList<>();
+            value.add(pemesananService.save(pemesanan));
+            responseData.setData(value);
+
+            return ResponseEntity.ok(responseData);
+        }
     }
 
     @GetMapping
@@ -89,10 +102,11 @@ public class PemesananController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseData<Pemesanan>> updatePemesanan(@Valid @RequestBody Pemesanan pemesanan, Errors errors) {
+    public ResponseEntity<ResponseData<Pemesanan>> updatePemesanan(@Valid @RequestBody Pemesanan pemesanan,
+            Errors errors) {
 
         ResponseData<Pemesanan> responseData = new ResponseData<>();
-        if(pemesanan.getId() != 0){
+        if (pemesanan.getId() != 0) {
             if (errors.hasErrors()) {
                 for (ObjectError error : errors.getAllErrors()) {
                     responseData.getMessage().add(error.getDefaultMessage());
@@ -161,12 +175,11 @@ public class PemesananController {
         ResponseData<Pemesanan> responseData = new ResponseData<>();
 
         System.out.print(validation.getId_user());
-        System.out.print(validation.getId_package());
         System.out.println(validation.getDate());
 
         try {
             Iterable<Pemesanan> values = pemesananService.doValidation(validation.getId_user(),
-            validation.getId_package(), validation.getDate());
+                    validation.getDate());
             responseData.setResult(true);
             responseData.getMessage();
             responseData.setData(values);
