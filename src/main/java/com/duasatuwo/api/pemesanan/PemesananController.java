@@ -1,6 +1,5 @@
 package com.duasatuwo.api.pemesanan;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +29,6 @@ public class PemesananController {
 
     @Autowired
     private PemesananService pemesananService;
-    private PemesananRepo pemesananRepo;
-    private Validation validation;
 
     @PostMapping
     public ResponseEntity<ResponseData<Pemesanan>> postPemesanan(@Valid @RequestBody Pemesanan pemesanan,
@@ -118,12 +115,23 @@ public class PemesananController {
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
-            responseData.setResult(true);
-            List<Pemesanan> value = new ArrayList<>();
-            value.add(pemesananService.save(pemesanan));
-            responseData.setData(value);
+            List<Pemesanan> storeData = (List<Pemesanan>) pemesananService.doValidation(pemesanan.getUser().getId(),
+                    pemesanan.getDate());
 
-            return ResponseEntity.ok(responseData);
+            if (storeData.size() >= 1) {
+                responseData.setResult(false);
+                responseData.getMessage().add("Anda Sudah Memesan Tanggal Ini");
+                responseData.setData(null);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+            } else {
+                responseData.setResult(true);
+                List<Pemesanan> value = new ArrayList<>();
+                value.add(pemesananService.save(pemesanan));
+                responseData.setData(value);
+
+                return ResponseEntity.ok(responseData);
+            }
         } else {
             responseData.getMessage().add("ID is Required");
             responseData.setResult(false);

@@ -18,25 +18,17 @@ import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "pemesanan")
-public class Pemesanan implements Serializable{
-    
+public class Pemesanan implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // @Column(length = 10)
-    // @NotEmpty(message = "User id is required")
-    // private int id_user;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
-
-    // @Column(length = 10)
-    // @NotEmpty(message = "Package id is required")
-    // private int id_package;
 
     @OneToOne
     @JoinColumn(name = "id_package")
@@ -101,6 +93,5 @@ public class Pemesanan implements Serializable{
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
-
 
 }

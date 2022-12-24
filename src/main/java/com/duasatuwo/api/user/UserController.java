@@ -44,11 +44,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
 
-        responseData.setResult(true);
-        List<User> value = new ArrayList<>();
-        value.add(userService.save(user));
-        responseData.setData(value);
-        return ResponseEntity.ok(responseData);
+        List<User> storeData = (List<User>) userService.findEmail(user.getEmail());
+
+        if (storeData.size() >= 1) {
+            responseData.setResult(false);
+            responseData.getMessage().add("Email Sudah Terdaftar");
+            responseData.setData(null);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        } else {
+            responseData.setResult(true);
+            List<User> value = new ArrayList<>();
+            value.add(userService.save(user));
+            responseData.setData(value);
+
+            return ResponseEntity.ok(responseData);
+        }
     }
 
     @GetMapping

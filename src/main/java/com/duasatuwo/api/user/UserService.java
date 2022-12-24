@@ -1,36 +1,21 @@
 package com.duasatuwo.api.user;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.duasatuwo.api.dto.AuthentificationKey;
-
-// import at.favre.lib.crypto.bcrypt.BCrypt;
+import at.favre.lib.crypto.bcrypt.BCrypt;
+import java.util.List;
 import javax.transaction.Transactional;
 
 @Service
 @Transactional
 public class UserService {
 
-    UserRepo userRepo;
-    PasswordEncoder passwordEncoder;
-    AuthentificationKey authentificationKey;
-
-    // @Autowired
-    // private UserRepo userRepo;
-    // private User user;
-
-    public UserService(UserRepo _userRepo) {
-        this.userRepo = _userRepo;
-        // this.authentificationKey = _authentificationKey;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private UserRepo userRepo;
 
     public User save(User user) {
-        String encodedPasssword = this.passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPasssword);
+        String bcryptHashString = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(bcryptHashString);
 
         return userRepo.save(user);
     }
@@ -43,13 +28,20 @@ public class UserService {
         return userRepo.findAll();
     }
 
+    public Iterable<User> findEmail(String email) {
+        return userRepo.findEmail(email);
+    }
+
     public Iterable<User> findAuth(String email, String password) {
-        String passwordEncode = this.passwordEncoder.encode(password);
-        if (passwordEncoder.matches(password, passwordEncode)) {
+        List<User> storeData = (List<User>) userRepo.findEmail(email);
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storeData.get(0).getPassword());
+        password = storeData.get(0).getPassword();
+        System.out.println("password=" + result);
+
+        if (result.verified == true) {
             return userRepo.findUserAuth(email, password);
+        } else {
+            return null;
         }
-
-        return null;
-
     }
 }
