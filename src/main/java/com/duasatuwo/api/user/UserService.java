@@ -36,7 +36,6 @@ public class UserService {
         List<User> storeData = (List<User>) userRepo.findEmail(email);
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storeData.get(0).getPassword());
         password = storeData.get(0).getPassword();
-        System.out.println("password=" + result);
 
         if (result.verified == true) {
             return userRepo.findUserAuth(email, password);

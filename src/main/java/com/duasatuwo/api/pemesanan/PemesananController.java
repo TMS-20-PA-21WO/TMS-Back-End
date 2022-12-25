@@ -49,19 +49,19 @@ public class PemesananController {
         List<Pemesanan> storeData = (List<Pemesanan>) pemesananService.doValidation(pemesanan.getUser().getId(),
                 pemesanan.getDate());
 
-        if (storeData.size() >= 1) {
-            responseData.setResult(false);
-            responseData.getMessage().add("Anda Sudah Memesan Tanggal Ini");
-            responseData.setData(null);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-        } else {
+        if (storeData.isEmpty()) {
             responseData.setResult(true);
             List<Pemesanan> value = new ArrayList<>();
             value.add(pemesananService.save(pemesanan));
             responseData.setData(value);
 
             return ResponseEntity.ok(responseData);
+        } else {
+            responseData.setResult(false);
+            responseData.getMessage().add("Anda Sudah Memesan Tanggal Ini");
+            responseData.setData(null);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
     }
 
@@ -118,19 +118,19 @@ public class PemesananController {
             List<Pemesanan> storeData = (List<Pemesanan>) pemesananService.doValidation(pemesanan.getUser().getId(),
                     pemesanan.getDate());
 
-            if (storeData.size() >= 1) {
-                responseData.setResult(false);
-                responseData.getMessage().add("Anda Sudah Memesan Tanggal Ini");
-                responseData.setData(null);
-
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-            } else {
+            if (storeData.isEmpty() || storeData.get(0).getId() == pemesanan.getId()) {
                 responseData.setResult(true);
                 List<Pemesanan> value = new ArrayList<>();
                 value.add(pemesananService.save(pemesanan));
                 responseData.setData(value);
 
                 return ResponseEntity.ok(responseData);
+            } else {
+                responseData.setResult(false);
+                responseData.getMessage().add("Anda Sudah Memesan Tanggal Ini");
+                responseData.setData(null);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
         } else {
             responseData.getMessage().add("ID is Required");
@@ -161,8 +161,6 @@ public class PemesananController {
     public ResponseEntity<ResponseData<Pemesanan>> getPemesananUser(@RequestBody PemesananByUser pemesananByUser) {
         ResponseData<Pemesanan> responseData = new ResponseData<>();
 
-        System.out.print(pemesananByUser.getId_user());
-
         try {
             Iterable<Pemesanan> values = pemesananService.findPemesananUser(pemesananByUser.getId_user());
             responseData.setResult(true);
@@ -183,9 +181,6 @@ public class PemesananController {
     @PostMapping("/validation")
     public ResponseEntity<ResponseData<Pemesanan>> getStudentAuth(@RequestBody Validation validation) {
         ResponseData<Pemesanan> responseData = new ResponseData<>();
-
-        System.out.print(validation.getId_user());
-        System.out.println(validation.getDate());
 
         try {
             Iterable<Pemesanan> values = pemesananService.doValidation(validation.getId_user(),

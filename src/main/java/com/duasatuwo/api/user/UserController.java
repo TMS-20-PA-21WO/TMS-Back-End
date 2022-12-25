@@ -46,19 +46,19 @@ public class UserController {
 
         List<User> storeData = (List<User>) userService.findEmail(user.getEmail());
 
-        if (storeData.size() >= 1) {
-            responseData.setResult(false);
-            responseData.getMessage().add("Email Sudah Terdaftar");
-            responseData.setData(null);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-        } else {
+        if (storeData.isEmpty()) {
             responseData.setResult(true);
             List<User> value = new ArrayList<>();
             value.add(userService.save(user));
             responseData.setData(value);
 
             return ResponseEntity.ok(responseData);
+        } else {
+            responseData.setResult(false);
+            responseData.getMessage().add("Email Sudah Terdaftar");
+            responseData.setData(null);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
     }
 
@@ -101,9 +101,6 @@ public class UserController {
     public ResponseEntity<ResponseData<User>> getStudentAuth(@RequestBody AuthentificationKey authentificationKey) {
         ResponseData<User> responseData = new ResponseData<>();
 
-        System.out.print(authentificationKey.getEmail());
-        System.out.print(authentificationKey.getPassword());
-
         try {
             Iterable<User> values = userService.findAuth(authentificationKey.getEmail(),
                     authentificationKey.getPassword());
@@ -125,8 +122,6 @@ public class UserController {
     @PostMapping("/findEmail")
     public ResponseEntity<ResponseData<User>> getEmail(@RequestBody GetEmail getEmail) {
         ResponseData<User> responseData = new ResponseData<>();
-
-        System.out.print(getEmail.getEmail());
 
         try {
             Iterable<User> values = userService.findEmail(getEmail.getEmail());
