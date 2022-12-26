@@ -147,7 +147,7 @@ public class UserController {
     
             String refresh_token = JWT.create()
                 .withSubject(values.toString())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 + 60 * 1000)) //expired 3 minutes
+                .withExpiresAt(new Date(System.currentTimeMillis() + 500 + 60 * 1000)) //expired 3 minutes
                 .withIssuer("auth0")
                 .sign(algorithm);
             
