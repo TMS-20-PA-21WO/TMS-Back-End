@@ -142,13 +142,13 @@ public class UserController {
             Algorithm algorithm = Algorithm.HMAC256(new MyHelpers().PRIVATE_KEY);
             String access_token = JWT.create()
                     .withSubject(values.toString())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 10 + 120 * 1000)) // expired 1 minutes
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 10 + 120 * 1000)) // expired 2 minutes
                     .withIssuer("auth0")
                     .sign(algorithm);
 
             String refresh_token = JWT.create()
                     .withSubject(values.toString())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 30 + 60 * 1000)) // expired 3 minutes
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 30 + 180 * 1000)) // expired 3 minutes
                     .withIssuer("auth0")
                     .sign(algorithm);
 
