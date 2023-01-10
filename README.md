@@ -24,8 +24,9 @@ mvn clean install package
 
 Finally, run the development.
 
-Turn on XAMPP apache
-Turn on XAMPP MySql
+Turn on XAMPP apache.
+
+Turn on XAMPP MySql.
 ```bash
 mvn spring-boot:run
 ```
