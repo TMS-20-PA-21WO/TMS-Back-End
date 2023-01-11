@@ -31,4 +31,4 @@ Turn on XAMPP MySql.
 mvn spring-boot:run
 ```
 
-Visit the following site to view the API documentation [Postman](https://documenter.getpostman.com/view/24721460/2s8YzP3QVG).
+Visit the following site to view the API documentation [Postman](https://documenter.getpostman.com/view/23296306/2s8ZDR75Q3).
