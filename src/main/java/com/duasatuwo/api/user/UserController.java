@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.duasatuwo.api.dto.AuthentificationKey;
 import com.duasatuwo.api.dto.GetEmail;
 import com.duasatuwo.api.dto.ResponseData;
 import com.duasatuwo.api.helper.MyHelpers;
@@ -28,8 +27,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import javax.validation.Valid;
-
-import com.duasatuwo.api.user.User;
 
 @RestController
 @RequestMapping("/api/user")
@@ -106,29 +103,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
     }
-
-    // @PostMapping("/auth")
-    // public ResponseEntity<ResponseData<User>> getStudentAuth(@RequestBody
-    // AuthentificationKey authentificationKey) {
-    // ResponseData<User> responseData = new ResponseData<>();
-
-    // try {
-    // Iterable<User> values = userService.findAuth(authentificationKey.getEmail(),
-    // authentificationKey.getPassword());
-    // responseData.setResult(true);
-    // responseData.getMessage();
-    // responseData.setData(values);
-    // return ResponseEntity.ok(responseData);
-
-    // } catch (Exception e) {
-    // List<String> message = new ArrayList<>();
-    // message.add(e.getMessage());
-    // responseData.setMessage(message);
-    // responseData.setData(null);
-    // responseData.setResult(false);
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-    // }
-    // }
 
     @PostMapping("/auth")
     public ResponseEntity<Map<String, String>> getStudentAuth(@RequestBody String payload) {
